@@ -13,11 +13,16 @@
    background: #f0f0f0;
    font-family: Arial, sans-serif;
  }
- #egg-count {
+ #stats {
    position: absolute;
    top: 20px;
    left: 20px;
    font-size: 24px;
+   display: flex;
+   align-items: center;
+ }
+ #stats button {
+   margin-left: 10px;
  }
  #container {
    position: relative;
@@ -42,24 +47,46 @@
 </style>
 </head>
 <body>
-<div id="egg-count">Eier: 0</div>
+<div id="stats">
+  <span id="egg-count">Eier: 0</span>
+  <button id="sell-btn" style="display:none;">8 Eier verkaufen</button>
+  <span id="gold-count" style="margin-left:10px;">Gold: 0</span>
+</div>
 <div id="container">
   <div id="chicken">🐔</div>
 </div>
 <script>
 const chicken = document.getElementById('chicken');
 const eggCountEl = document.getElementById('egg-count');
+const sellBtn = document.getElementById('sell-btn');
+const goldCountEl = document.getElementById('gold-count');
 let count = 0;
+let gold = 0;
 
 chicken.addEventListener('click', () => {
   count++;
   eggCountEl.textContent = 'Eier: ' + count;
+  if (count >= 50) {
+    sellBtn.style.display = 'inline';
+  }
 
   const egg = document.createElement('div');
   egg.className = 'egg';
   egg.textContent = '🥚';
   document.getElementById('container').appendChild(egg);
   setTimeout(() => egg.remove(), 3000);
+});
+
+sellBtn.addEventListener('click', () => {
+  if (count >= 8) {
+    count -= 8;
+    gold += 1;
+    eggCountEl.textContent = 'Eier: ' + count;
+    goldCountEl.textContent = 'Gold: ' + gold;
+    if (count < 50) {
+      sellBtn.style.display = 'none';
+    }
+  }
 });
 </script>
 </body>
