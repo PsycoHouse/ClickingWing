@@ -67,6 +67,26 @@
           opacity: 0;
         }
       }
+    #banner {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      border: 2px solid black;
+      padding: 20px;
+      font-size: 24px;
+      display: none;
+      z-index: 2;
+    }
+    #farm {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      border: 1px solid #333;
+      padding: 10px;
+      display: none;
+    }
     </style>
   </head>
   <body>
@@ -87,11 +107,22 @@
       <button id="farmer-btn" style="display: none">
         Farmer anheuern (15🪙)
       </button>
+      <button id="buy-farm-btn" style="display: none">Bauernhof kaufen (100🪙)</button>
     </div>
     <div id="container">
       <h1 id="cage-heading">Käfighaltung</h1>
       <div id="chicken">⛓🐔⛓</div>
     </div>
+    <div id="farm">
+      <h2>Bauernhof</h2>
+      <span id="farm-farmer-count">Farmer: 0</span>
+      <button id="assign-farmer-btn">Farmer zuweisen</button><br />
+      <span id="farm-merchant-count">Händler: 0</span>
+      <button id="assign-merchant-btn">Händler zuweisen</button><br />
+      <span id="farm-chicken-type">Keine Hühner</span>
+      <button id="assign-chicken-btn">Kä-Hühner zuweisen</button>
+    </div>
+    <div id="banner"></div>
     <script>
       const chicken = document.getElementById("chicken");
       const eggCountEl = document.getElementById("egg-count");
@@ -103,6 +134,15 @@
       const chickenCountEl = document.getElementById("chicken-count");
       const farmerBtn = document.getElementById("farmer-btn");
       const farmerCountEl = document.getElementById("farmer-count");
+      const buyFarmBtn = document.getElementById("buy-farm-btn");
+      const farmEl = document.getElementById("farm");
+      const assignFarmerBtn = document.getElementById("assign-farmer-btn");
+      const assignMerchantBtn = document.getElementById("assign-merchant-btn");
+      const assignChickenBtn = document.getElementById("assign-chicken-btn");
+      const farmFarmerCountEl = document.getElementById("farm-farmer-count");
+      const farmMerchantCountEl = document.getElementById("farm-merchant-count");
+      const farmChickenTypeEl = document.getElementById("farm-chicken-type");
+      const bannerEl = document.getElementById("banner");
       let count = 0;
       let gold = 0;
       let merchantCount = 0;
@@ -112,8 +152,23 @@
       let farmerCount = 0;
       let farmerVisible = false;
       let progressStage = 0;
-      const progressGoals = [5, 10, 15];
+      const progressGoals = [5, 10, 15, 100];
+      let farmBuilt = false;
+      let farmFarmers = 0;
+      let farmMerchants = 0;
+      let farmChickenAssigned = false;
+      let farmMultiplier = 1;
+      let chapter2Shown = false;
+      let farmChickenCount = 0;
       let clickInterval;
+
+      function showBanner(text) {
+        bannerEl.textContent = text;
+        bannerEl.style.display = "block";
+        setTimeout(() => {
+          bannerEl.style.display = "none";
+        }, 5000);
+      }
 
       function updateDisplays() {
         eggCountEl.textContent = "Kä-Ei: " + count;
@@ -153,6 +208,21 @@
           farmerBtn.style.display = "inline";
           farmerVisible = true;
         }
+        if (!farmBuilt && gold >= 100) {
+          buyFarmBtn.style.display = "inline";
+        } else {
+          buyFarmBtn.style.display = "none";
+        }
+        farmEl.style.display = farmBuilt ? "block" : "none";
+        farmFarmerCountEl.textContent = "Farmer: " + farmFarmers;
+        farmMerchantCountEl.textContent = "Händler: " + farmMerchants;
+        farmChickenTypeEl.textContent = farmChickenAssigned
+          ? "Käfighaltungshühner"
+          : "Keine Hühner";
+        if (progressStage >= 3 && gold >= 100 && !chapter2Shown) {
+          showBanner("Kapitel 2: Markteinführung");
+          chapter2Shown = true;
+        }
       }
 
       // Initial display update
@@ -169,6 +239,7 @@
       }
 
       function produceEgg() {
+        if (chickenCount <= 0) return;
         count += chickenCount;
         if (count >= 50) {
           sellBtn.style.display = "inline";
@@ -219,7 +290,11 @@
       buyChickenBtn.addEventListener("click", () => {
         if (gold >= 10) {
           gold -= 10;
-          chickenCount += 1;
+          if (farmChickenAssigned) {
+            farmChickenCount += 1;
+          } else {
+            chickenCount += 1;
+          }
           if (progressStage === 1) {
             progressStage += 1;
           }
@@ -227,8 +302,44 @@
         }
       });
 
+      buyFarmBtn.addEventListener("click", () => {
+        if (gold >= 100 && !farmBuilt) {
+          gold -= 100;
+          farmBuilt = true;
+          progressStage += 1;
+          updateDisplays();
+        }
+      });
+
+      assignFarmerBtn.addEventListener("click", () => {
+        if (farmerCount > 0 && farmBuilt) {
+          farmerCount -= 1;
+          farmFarmers += 1;
+          updateDisplays();
+        }
+      });
+
+      assignMerchantBtn.addEventListener("click", () => {
+        if (merchantCount > 0 && farmBuilt) {
+          merchantCount -= 1;
+          farmMerchants += 1;
+          updateDisplays();
+        }
+      });
+
+      assignChickenBtn.addEventListener("click", () => {
+        if (farmBuilt && !farmChickenAssigned && chickenCount > 0) {
+          farmChickenAssigned = true;
+          farmChickenCount += chickenCount;
+          chickenCount = 0;
+          farmMultiplier = 1.15;
+          document.getElementById("container").style.display = "none";
+          updateDisplays();
+        }
+      });
+
       setInterval(() => {
-        if (farmerCount > 0) {
+        if (farmerCount > 0 && chickenCount > 0) {
           count += farmerCount;
           if (count >= 50) {
             sellBtn.style.display = "inline";
@@ -236,11 +347,20 @@
           spawnEgg(farmerCount);
           updateDisplays();
         }
+        if (farmBuilt && farmChickenAssigned && farmFarmers > 0) {
+          const produced = Math.round(farmFarmers * farmMultiplier);
+          count += produced;
+          if (count >= 50) {
+            sellBtn.style.display = "inline";
+          }
+          spawnEgg(produced);
+          updateDisplays();
+        }
       }, 1000);
 
       setInterval(() => {
         const possibleSales = Math.floor(count / 8);
-        const sales = Math.min(merchantCount, possibleSales);
+        const sales = Math.min(merchantCount + farmMerchants, possibleSales);
         if (sales > 0) {
           count -= sales * 8;
           gold += sales;
