@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>Huhn Klicker</title>
+<style>
+ body {
+   margin: 0;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   height: 100vh;
+   background: #f0f0f0;
+   font-family: Arial, sans-serif;
+ }
+ #egg-count {
+   position: absolute;
+   top: 20px;
+   left: 20px;
+   font-size: 24px;
+ }
+ #container {
+   position: relative;
+ }
+ #chicken {
+   font-size: 100px;
+   cursor: pointer;
+   user-select: none;
+ }
+ .egg {
+   position: absolute;
+   top: 0;
+   left: 50%;
+   transform: translateX(-50%);
+   font-size: 40px;
+   animation: drop 3s forwards;
+ }
+ @keyframes drop {
+   0% { top: 0; opacity: 1; }
+   100% { top: 200px; opacity: 0; }
+ }
+</style>
+</head>
+<body>
+<div id="egg-count">Eier: 0</div>
+<div id="container">
+  <div id="chicken">🐔</div>
+</div>
+<script>
+const chicken = document.getElementById('chicken');
+const eggCountEl = document.getElementById('egg-count');
+let count = 0;
+
+chicken.addEventListener('click', () => {
+  count++;
+  eggCountEl.textContent = 'Eier: ' + count;
+
+  const egg = document.createElement('div');
+  egg.className = 'egg';
+  egg.textContent = '🥚';
+  document.getElementById('container').appendChild(egg);
+  setTimeout(() => egg.remove(), 3000);
+});
+</script>
+</body>
+</html>
