@@ -22,19 +22,22 @@
  #container {
    position: relative;
  }
- #chicken {
-   font-size: 100px;
-   cursor: pointer;
-   user-select: none;
- }
- .egg {
-   position: absolute;
-   top: 0;
-   left: 50%;
-   transform: translateX(-50%);
-   font-size: 40px;
-   animation: drop 3s forwards;
- }
+  #chicken {
+    position: relative;
+    z-index: 1;
+    font-size: 100px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .egg {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 40px;
+    animation: drop 3s forwards;
+    z-index: 0;
+  }
  @keyframes drop {
    0% { top: 0; opacity: 1; }
    100% { top: 200px; opacity: 0; }
