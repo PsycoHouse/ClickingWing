@@ -1,170 +1,231 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="de">
-<head>
-<meta charset="UTF-8">
-<title>Huhn Klicker</title>
-<style>
- body {
-   margin: 0;
-   display: flex;
-   justify-content: center;
-   align-items: center;
-   height: 100vh;
-   background: #f0f0f0;
-   font-family: Arial, sans-serif;
- }
-#counter-boxes {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  font-size: 24px;
-  display: flex;
-  flex-direction: column;
-}
-#button-boxes {
-  position: absolute;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 24px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-#button-boxes button {
-  margin-top: 5px;
-}
-#container {
-  position: relative;
-}
-  #chicken {
-    position: relative;
-    z-index: 1;
-    font-size: 100px;
-    cursor: pointer;
-    user-select: none;
-  }
-  .egg {
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 40px;
-    animation: drop 3s forwards;
-    z-index: 0;
-  }
- @keyframes drop {
-   0% { top: 0; opacity: 1; }
-   100% { top: 200px; opacity: 0; }
- }
-</style>
-</head>
-<body>
-<div id="counter-boxes">
-  <span id="egg-count">Eier: 0</span>
-  <span id="gold-count">🪙 0</span>
-  <span id="merchant-count" style="display:none;">Händler: 0</span>
-  <span id="chicken-count" style="display:none;">Hühner: 1</span>
-</div>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Huhn Klicker</title>
+    <style>
+      body {
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background: #f0f0f0;
+        font-family: Arial, sans-serif;
+      }
+      #counter-boxes {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        font-size: 24px;
+        display: flex;
+        flex-direction: column;
+      }
+      #button-boxes {
+        position: absolute;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 24px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      #button-boxes button {
+        margin-top: 5px;
+      }
+      #container {
+        position: relative;
+      }
+      #chicken {
+        position: relative;
+        z-index: 1;
+        font-size: 100px;
+        cursor: pointer;
+        user-select: none;
+      }
+      .egg {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 40px;
+        animation: drop 3s forwards;
+        z-index: 0;
+      }
+      @keyframes drop {
+        0% {
+          top: 0;
+          opacity: 1;
+        }
+        100% {
+          top: 200px;
+          opacity: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="counter-boxes">
+      <span id="egg-count">Eier: 0</span>
+      <span id="gold-count">🪙 0</span>
+      <span id="merchant-count" style="display: none">Händler: 0</span>
+      <span id="chicken-count" style="display: none">Hühner: 1</span>
+      <span id="farmer-count" style="display: none">Farmer: 0</span>
+    </div>
 
-<div id="button-boxes">
-  <button id="merchant-btn" style="display:none;">Händler anheuern (5🪙)</button>
-  <button id="buy-chicken-btn" style="display:none;">Huhn kaufen</button>
-  <button id="sell-btn" style="display:none;">8 Eier verkaufen</button>
-</div>
-<div id="container">
-  <div id="chicken">🐔</div>
-</div>
-<script>
-const chicken = document.getElementById('chicken');
-const eggCountEl = document.getElementById('egg-count');
-const merchantCountEl = document.getElementById('merchant-count');
-const sellBtn = document.getElementById('sell-btn');
-const goldCountEl = document.getElementById('gold-count');
-const merchantBtn = document.getElementById('merchant-btn');
-const buyChickenBtn = document.getElementById('buy-chicken-btn');
-const chickenCountEl = document.getElementById('chicken-count');
-let count = 0;
-let gold = 0;
-let merchantCount = 0;
-let merchantVisible = false;
-let chickenCount = 1;
-let buyChickenVisible = false;
+    <div id="button-boxes">
+      <button id="merchant-btn" style="display: none">
+        Händler anheuern (5🪙)
+      </button>
+      <button id="buy-chicken-btn" style="display: none">Huhn kaufen</button>
+      <button id="sell-btn" style="display: none">8 Eier verkaufen</button>
+      <button id="farmer-btn" style="display: none">
+        Farmer anheuern (15🪙)
+      </button>
+    </div>
+    <div id="container">
+      <div id="chicken">🐔</div>
+    </div>
+    <script>
+      const chicken = document.getElementById("chicken");
+      const eggCountEl = document.getElementById("egg-count");
+      const merchantCountEl = document.getElementById("merchant-count");
+      const sellBtn = document.getElementById("sell-btn");
+      const goldCountEl = document.getElementById("gold-count");
+      const merchantBtn = document.getElementById("merchant-btn");
+      const buyChickenBtn = document.getElementById("buy-chicken-btn");
+      const chickenCountEl = document.getElementById("chicken-count");
+      const farmerBtn = document.getElementById("farmer-btn");
+      const farmerCountEl = document.getElementById("farmer-count");
+      let count = 0;
+      let gold = 0;
+      let merchantCount = 0;
+      let merchantVisible = false;
+      let chickenCount = 1;
+      let buyChickenVisible = false;
+      let farmerCount = 0;
+      let farmerVisible = false;
+      let clickInterval;
 
-function updateDisplays() {
-  eggCountEl.textContent = 'Eier: ' + count;
-  if (merchantCount > 0) {
-    merchantCountEl.style.display = 'block';
-    merchantCountEl.textContent = 'Händler: ' + merchantCount;
-  } else {
-    merchantCountEl.style.display = 'none';
-  }
-  if (chickenCount > 1) {
-    chickenCountEl.style.display = 'block';
-    chickenCountEl.textContent = 'Hühner: ' + chickenCount;
-  } else {
-    chickenCountEl.style.display = 'none';
-  }
-  goldCountEl.textContent = '🪙 ' + gold;
-  if (!merchantVisible && gold >= 5) {
-    merchantBtn.style.display = 'inline';
-    merchantVisible = true;
-  }
-  if (!buyChickenVisible && gold >= 10) {
-    buyChickenBtn.style.display = 'inline';
-    buyChickenVisible = true;
-  }
-}
+      function updateDisplays() {
+        eggCountEl.textContent = "Eier: " + count;
+        if (merchantCount > 0) {
+          merchantCountEl.style.display = "block";
+          merchantCountEl.textContent = "Händler: " + merchantCount;
+        } else {
+          merchantCountEl.style.display = "none";
+        }
+        if (farmerCount > 0) {
+          farmerCountEl.style.display = "block";
+          farmerCountEl.textContent = "Farmer: " + farmerCount;
+        } else {
+          farmerCountEl.style.display = "none";
+        }
+        if (chickenCount > 1) {
+          chickenCountEl.style.display = "block";
+          chickenCountEl.textContent = "Hühner: " + chickenCount;
+        } else {
+          chickenCountEl.style.display = "none";
+        }
+        goldCountEl.textContent = "🪙 " + gold;
+        if (!merchantVisible && gold >= 5) {
+          merchantBtn.style.display = "inline";
+          merchantVisible = true;
+        }
+        if (!buyChickenVisible && gold >= 10) {
+          buyChickenBtn.style.display = "inline";
+          buyChickenVisible = true;
+        }
+        if (!farmerVisible && gold >= 15) {
+          farmerBtn.style.display = "inline";
+          farmerVisible = true;
+        }
+      }
 
-// Initial display update
-updateDisplays();
-chicken.addEventListener('click', () => {
-  count += chickenCount;
-  updateDisplays();
-  if (count >= 50) {
-    sellBtn.style.display = 'inline';
-  }
+      // Initial display update
+      updateDisplays();
 
-  const egg = document.createElement('div');
-  egg.className = 'egg';
-  egg.textContent = '🥚';
-  document.getElementById('container').appendChild(egg);
-  setTimeout(() => egg.remove(), 3000);
-});
+      function spawnEgg(amount) {
+        for (let i = 0; i < amount; i++) {
+          const egg = document.createElement("div");
+          egg.className = "egg";
+          egg.textContent = "🥚";
+          document.getElementById("container").appendChild(egg);
+          setTimeout(() => egg.remove(), 3000);
+        }
+      }
 
-sellBtn.addEventListener('click', () => {
-  if (count >= 8) {
-    count -= 8;
-    gold += 1;
-    updateDisplays();
-  }
-});
+      function produceEgg() {
+        count += chickenCount;
+        if (count >= 50) {
+          sellBtn.style.display = "inline";
+        }
+        spawnEgg(chickenCount);
+        updateDisplays();
+      }
 
-merchantBtn.addEventListener('click', () => {
-  if (gold >= 5) {
-    gold -= 5;
-    merchantCount += 1;
-    updateDisplays();
-  }
-});
+      chicken.addEventListener("mousedown", () => {
+        produceEgg();
+        clickInterval = setInterval(produceEgg, 500);
+      });
 
-buyChickenBtn.addEventListener('click', () => {
-  if (gold >= 10) {
-    gold -= 10;
-    chickenCount += 1;
-    updateDisplays();
-  }
-});
+      ["mouseup", "mouseleave"].forEach((ev) => {
+        chicken.addEventListener(ev, () => clearInterval(clickInterval));
+      });
 
-setInterval(() => {
-  const possibleSales = Math.floor(count / 8);
-  const sales = Math.min(merchantCount, possibleSales);
-  if (sales > 0) {
-    count -= sales * 8;
-    gold += sales;
-    updateDisplays();
-  }
-}, 5000);
-</script>
-</body>
+      sellBtn.addEventListener("click", () => {
+        if (count >= 8) {
+          count -= 8;
+          gold += 1;
+          updateDisplays();
+        }
+      });
+
+      merchantBtn.addEventListener("click", () => {
+        if (gold >= 5) {
+          gold -= 5;
+          merchantCount += 1;
+          updateDisplays();
+        }
+      });
+
+      farmerBtn.addEventListener("click", () => {
+        if (gold >= 15) {
+          gold -= 15;
+          farmerCount += 1;
+          updateDisplays();
+        }
+      });
+
+      buyChickenBtn.addEventListener("click", () => {
+        if (gold >= 10) {
+          gold -= 10;
+          chickenCount += 1;
+          updateDisplays();
+        }
+      });
+
+      setInterval(() => {
+        if (farmerCount > 0) {
+          count += farmerCount;
+          if (count >= 50) {
+            sellBtn.style.display = "inline";
+          }
+          spawnEgg(farmerCount);
+          updateDisplays();
+        }
+      }, 1000);
+
+      setInterval(() => {
+        const possibleSales = Math.floor(count / 8);
+        const sales = Math.min(merchantCount, possibleSales);
+        if (sales > 0) {
+          count -= sales * 8;
+          gold += sales;
+          updateDisplays();
+        }
+      }, 5000);
+    </script>
+  </body>
 </html>
