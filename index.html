@@ -53,7 +53,7 @@
 <div id="stats">
   <span id="egg-count">Eier: 0</span>
   <button id="sell-btn" style="display:none;">8 Eier verkaufen</button>
-  <span id="gold-count" style="margin-left:10px;">Gold: 0</span>
+  <span id="gold-count" style="margin-left:10px;">🪙 0</span>
 </div>
 <div id="container">
   <div id="chicken">🐔</div>
@@ -85,10 +85,7 @@ sellBtn.addEventListener('click', () => {
     count -= 8;
     gold += 1;
     eggCountEl.textContent = 'Eier: ' + count;
-    goldCountEl.textContent = 'Gold: ' + gold;
-    if (count < 50) {
-      sellBtn.style.display = 'none';
-    }
+    goldCountEl.textContent = '🪙 ' + gold;
   }
 });
 </script>
