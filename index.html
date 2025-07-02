@@ -25,6 +25,9 @@
    display: flex;
    flex-direction: column;
  }
+ #merchant-btn {
+   margin-left: 10ch;
+ }
  #stats button {
    margin-left: 10px;
  }
@@ -57,8 +60,9 @@
 <div id="stats">
   <div id="egg-container">
     <span id="egg-count">Eier: 0</span>
-    <button id="merchant-btn" style="display:none;margin-top:5px;">Händler anheuern (5🪙)</button>
+    <span id="merchant-count">Händler: 0</span>
   </div>
+  <button id="merchant-btn" style="display:none;">Händler anheuern (5🪙)</button>
   <button id="sell-btn" style="display:none;">8 Eier verkaufen</button>
   <span id="gold-count" style="margin-left:10px;">🪙 0</span>
 </div>
@@ -68,18 +72,22 @@
 <script>
 const chicken = document.getElementById('chicken');
 const eggCountEl = document.getElementById('egg-count');
+const merchantCountEl = document.getElementById('merchant-count');
 const sellBtn = document.getElementById('sell-btn');
 const goldCountEl = document.getElementById('gold-count');
 const merchantBtn = document.getElementById('merchant-btn');
 let count = 0;
 let gold = 0;
-let merchantActive = false;
+let merchantCount = 0;
+let merchantVisible = false;
 
 function updateDisplays() {
   eggCountEl.textContent = 'Eier: ' + count;
+  merchantCountEl.textContent = 'Händler: ' + merchantCount;
   goldCountEl.textContent = '🪙 ' + gold;
-  if (!merchantActive && gold >= 5) {
+  if (!merchantVisible && gold >= 5) {
     merchantBtn.style.display = 'inline';
+    merchantVisible = true;
   }
 }
 
@@ -108,20 +116,22 @@ sellBtn.addEventListener('click', () => {
 });
 
 merchantBtn.addEventListener('click', () => {
-  if (gold >= 5 && !merchantActive) {
+  if (gold >= 5) {
     gold -= 5;
-    merchantActive = true;
-    merchantBtn.style.display = 'none';
+    merchantCount += 1;
     updateDisplays();
-    setInterval(() => {
-      if (count >= 8) {
-        count -= 8;
-        gold += 1;
-        updateDisplays();
-      }
-    }, 5000);
   }
 });
+
+setInterval(() => {
+  const possibleSales = Math.floor(count / 8);
+  const sales = Math.min(merchantCount, possibleSales);
+  if (sales > 0) {
+    count -= sales * 8;
+    gold += sales;
+    updateDisplays();
+  }
+}, 5000);
 </script>
 </body>
 </html>
