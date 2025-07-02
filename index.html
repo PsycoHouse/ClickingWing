@@ -111,6 +111,8 @@
       let buyChickenVisible = false;
       let farmerCount = 0;
       let farmerVisible = false;
+      let progressStage = 0;
+      const progressGoals = [5, 10, 15];
       let clickInterval;
 
       function updateDisplays() {
@@ -133,7 +135,12 @@
         } else {
           chickenCountEl.style.display = "none";
         }
-        goldCountEl.textContent = "🪙 " + gold;
+        const nextGoal = progressGoals[progressStage];
+        if (nextGoal !== undefined) {
+          goldCountEl.textContent = "🪙 " + gold + "/" + nextGoal;
+        } else {
+          goldCountEl.textContent = "🪙 " + gold;
+        }
         if (!merchantVisible && gold >= 5) {
           merchantBtn.style.display = "inline";
           merchantVisible = true;
@@ -191,6 +198,9 @@
         if (gold >= 5) {
           gold -= 5;
           merchantCount += 1;
+          if (progressStage === 0) {
+            progressStage += 1;
+          }
           updateDisplays();
         }
       });
@@ -199,6 +209,9 @@
         if (gold >= 15) {
           gold -= 15;
           farmerCount += 1;
+          if (progressStage === 2) {
+            progressStage += 1;
+          }
           updateDisplays();
         }
       });
@@ -207,6 +220,9 @@
         if (gold >= 10) {
           gold -= 10;
           chickenCount += 1;
+          if (progressStage === 1) {
+            progressStage += 1;
+          }
           updateDisplays();
         }
       });
