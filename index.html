@@ -13,36 +13,26 @@
    background: #f0f0f0;
    font-family: Arial, sans-serif;
  }
- #stats {
-   position: absolute;
-   top: 20px;
-   left: 20px;
-   font-size: 24px;
-   display: flex;
-   align-items: center;
- }
- #egg-container {
-   display: flex;
-   flex-direction: column;
- }
- #merchant-btn {
-   margin-left: 10ch;
- }
-#stats button {
-  margin-left: 10px;
-}
-#gold-count {
+#counter-boxes {
   position: absolute;
   top: 20px;
-  right: 20px;
+  left: 20px;
   font-size: 24px;
+  display: flex;
+  flex-direction: column;
 }
-#merchant-count {
+#button-boxes {
   position: absolute;
   top: 20px;
   left: 50%;
   transform: translateX(-50%);
   font-size: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+#button-boxes button {
+  margin-top: 5px;
 }
 #container {
   position: relative;
@@ -70,16 +60,18 @@
 </style>
 </head>
 <body>
-<div id="stats">
-  <div id="egg-container">
-    <span id="egg-count">Eier: 0</span>
-  </div>
+<div id="counter-boxes">
+  <span id="egg-count">Eier: 0</span>
+  <span id="gold-count">🪙 0</span>
+  <span id="merchant-count" style="display:none;">Händler: 0</span>
+  <span id="chicken-count" style="display:none;">Hühner: 1</span>
+</div>
+
+<div id="button-boxes">
   <button id="merchant-btn" style="display:none;">Händler anheuern (5🪙)</button>
   <button id="buy-chicken-btn" style="display:none;">Huhn kaufen</button>
   <button id="sell-btn" style="display:none;">8 Eier verkaufen</button>
 </div>
-<span id="gold-count">🪙 0</span>
-<span id="merchant-count" style="display:none;">Händler: 0</span>
 <div id="container">
   <div id="chicken">🐔</div>
 </div>
@@ -91,6 +83,7 @@ const sellBtn = document.getElementById('sell-btn');
 const goldCountEl = document.getElementById('gold-count');
 const merchantBtn = document.getElementById('merchant-btn');
 const buyChickenBtn = document.getElementById('buy-chicken-btn');
+const chickenCountEl = document.getElementById('chicken-count');
 let count = 0;
 let gold = 0;
 let merchantCount = 0;
@@ -105,6 +98,12 @@ function updateDisplays() {
     merchantCountEl.textContent = 'Händler: ' + merchantCount;
   } else {
     merchantCountEl.style.display = 'none';
+  }
+  if (chickenCount > 1) {
+    chickenCountEl.style.display = 'block';
+    chickenCountEl.textContent = 'Hühner: ' + chickenCount;
+  } else {
+    chickenCountEl.style.display = 'none';
   }
   goldCountEl.textContent = '🪙 ' + gold;
   if (!merchantVisible && gold >= 5) {
