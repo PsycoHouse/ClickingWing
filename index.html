@@ -28,12 +28,25 @@
  #merchant-btn {
    margin-left: 10ch;
  }
- #stats button {
-   margin-left: 10px;
- }
- #container {
-   position: relative;
- }
+#stats button {
+  margin-left: 10px;
+}
+#gold-count {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 24px;
+}
+#merchant-count {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 24px;
+}
+#container {
+  position: relative;
+}
   #chicken {
     position: relative;
     z-index: 1;
@@ -60,12 +73,12 @@
 <div id="stats">
   <div id="egg-container">
     <span id="egg-count">Eier: 0</span>
-    <span id="merchant-count">Händler: 0</span>
   </div>
   <button id="merchant-btn" style="display:none;">Händler anheuern (5🪙)</button>
   <button id="sell-btn" style="display:none;">8 Eier verkaufen</button>
-  <span id="gold-count" style="margin-left:10px;">🪙 0</span>
 </div>
+<span id="gold-count">🪙 0</span>
+<span id="merchant-count" style="display:none;">Händler: 0</span>
 <div id="container">
   <div id="chicken">🐔</div>
 </div>
@@ -83,7 +96,12 @@ let merchantVisible = false;
 
 function updateDisplays() {
   eggCountEl.textContent = 'Eier: ' + count;
-  merchantCountEl.textContent = 'Händler: ' + merchantCount;
+  if (merchantCount > 0) {
+    merchantCountEl.style.display = 'block';
+    merchantCountEl.textContent = 'Händler: ' + merchantCount;
+  } else {
+    merchantCountEl.style.display = 'none';
+  }
   goldCountEl.textContent = '🪙 ' + gold;
   if (!merchantVisible && gold >= 5) {
     merchantBtn.style.display = 'inline';
