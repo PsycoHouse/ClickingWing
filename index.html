@@ -21,6 +21,10 @@
    display: flex;
    align-items: center;
  }
+ #egg-container {
+   display: flex;
+   flex-direction: column;
+ }
  #stats button {
    margin-left: 10px;
  }
@@ -51,7 +55,10 @@
 </head>
 <body>
 <div id="stats">
-  <span id="egg-count">Eier: 0</span>
+  <div id="egg-container">
+    <span id="egg-count">Eier: 0</span>
+    <button id="merchant-btn" style="display:none;margin-top:5px;">Händler anheuern (5🪙)</button>
+  </div>
   <button id="sell-btn" style="display:none;">8 Eier verkaufen</button>
   <span id="gold-count" style="margin-left:10px;">🪙 0</span>
 </div>
@@ -63,12 +70,24 @@ const chicken = document.getElementById('chicken');
 const eggCountEl = document.getElementById('egg-count');
 const sellBtn = document.getElementById('sell-btn');
 const goldCountEl = document.getElementById('gold-count');
+const merchantBtn = document.getElementById('merchant-btn');
 let count = 0;
 let gold = 0;
+let merchantActive = false;
 
+function updateDisplays() {
+  eggCountEl.textContent = 'Eier: ' + count;
+  goldCountEl.textContent = '🪙 ' + gold;
+  if (!merchantActive && gold >= 5) {
+    merchantBtn.style.display = 'inline';
+  }
+}
+
+// Initial display update
+updateDisplays();
 chicken.addEventListener('click', () => {
   count++;
-  eggCountEl.textContent = 'Eier: ' + count;
+  updateDisplays();
   if (count >= 50) {
     sellBtn.style.display = 'inline';
   }
@@ -84,8 +103,23 @@ sellBtn.addEventListener('click', () => {
   if (count >= 8) {
     count -= 8;
     gold += 1;
-    eggCountEl.textContent = 'Eier: ' + count;
-    goldCountEl.textContent = '🪙 ' + gold;
+    updateDisplays();
+  }
+});
+
+merchantBtn.addEventListener('click', () => {
+  if (gold >= 5 && !merchantActive) {
+    gold -= 5;
+    merchantActive = true;
+    merchantBtn.style.display = 'none';
+    updateDisplays();
+    setInterval(() => {
+      if (count >= 8) {
+        count -= 8;
+        gold += 1;
+        updateDisplays();
+      }
+    }, 5000);
   }
 });
 </script>
