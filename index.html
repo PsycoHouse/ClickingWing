@@ -37,6 +37,10 @@
       #container {
         position: relative;
       }
+      #cage-heading {
+        text-align: center;
+        margin: 0;
+      }
       #chicken {
         position: relative;
         z-index: 1;
@@ -67,10 +71,10 @@
   </head>
   <body>
     <div id="counter-boxes">
-      <span id="egg-count">Eier: 0</span>
+      <span id="egg-count">Kä-Ei: 0</span>
       <span id="gold-count">🪙 0</span>
       <span id="merchant-count" style="display: none">Händler: 0</span>
-      <span id="chicken-count" style="display: none">Hühner: 1</span>
+      <span id="chicken-count" style="display: none">Kä-Hühner: 1</span>
       <span id="farmer-count" style="display: none">Farmer: 0</span>
     </div>
 
@@ -78,14 +82,15 @@
       <button id="merchant-btn" style="display: none">
         Händler anheuern (5🪙)
       </button>
-      <button id="buy-chicken-btn" style="display: none">Huhn kaufen</button>
+      <button id="buy-chicken-btn" style="display: none">Kä-Huhn kaufen</button>
       <button id="sell-btn" style="display: none">8 Eier verkaufen</button>
       <button id="farmer-btn" style="display: none">
         Farmer anheuern (15🪙)
       </button>
     </div>
     <div id="container">
-      <div id="chicken">🐔</div>
+      <h1 id="cage-heading">Käfighaltung</h1>
+      <div id="chicken">⛓🐔⛓</div>
     </div>
     <script>
       const chicken = document.getElementById("chicken");
@@ -109,7 +114,7 @@
       let clickInterval;
 
       function updateDisplays() {
-        eggCountEl.textContent = "Eier: " + count;
+        eggCountEl.textContent = "Kä-Ei: " + count;
         if (merchantCount > 0) {
           merchantCountEl.style.display = "block";
           merchantCountEl.textContent = "Händler: " + merchantCount;
@@ -124,7 +129,7 @@
         }
         if (chickenCount > 1) {
           chickenCountEl.style.display = "block";
-          chickenCountEl.textContent = "Hühner: " + chickenCount;
+          chickenCountEl.textContent = "Kä-Hühner: " + chickenCount;
         } else {
           chickenCountEl.style.display = "none";
         }
