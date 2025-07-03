@@ -95,6 +95,22 @@
       padding: 10px;
       display: none;
     }
+    #farm3 {
+      position: absolute;
+      top: 300px;
+      right: 20px;
+      border: 1px solid #333;
+      padding: 10px;
+      display: none;
+    }
+    #farm4 {
+      position: absolute;
+      top: 440px;
+      right: 20px;
+      border: 1px solid #333;
+      padding: 10px;
+      display: none;
+    }
     #reset-btn {
       position: fixed;
       bottom: 10px;
@@ -110,6 +126,8 @@
       <span id="merchant-count" style="display: none">Merchants: 0</span>
       <span id="chicken-count" style="display: none">⛓-Chickens: 1</span>
       <span id="ground-egg-count" style="display: none">Ground Egg: 0</span>
+      <span id="free-egg-count" style="display: none">Free Egg: 0</span>
+      <span id="bio-egg-count" style="display: none">Bio Egg: 0</span>
       <span id="farmer-count" style="display: none">Farmers: 0</span>
     </div>
 
@@ -119,13 +137,19 @@
       </button>
       <button id="buy-chicken-btn" style="display: none">Buy ⛓ Chicken</button>
       <button id="buy-ground-chicken-btn" style="display: none">Buy Ground Chicken (250🪙)</button>
+      <button id="buy-free-chicken-btn" style="display: none">Buy Free Chicken (2500🪙)</button>
+      <button id="buy-bio-chicken-btn" style="display: none">Buy Bio Chicken (7500🪙)</button>
       <button id="sell-btn" style="display: none">Sell 8 Eggs</button>
       <button id="sell-ground-btn" style="display: none">Sell 8 Ground Eggs</button>
+      <button id="sell-free-btn" style="display: none">Sell 8 Free Eggs</button>
+      <button id="sell-bio-btn" style="display: none">Sell 8 Bio Eggs</button>
       <button id="farmer-btn" style="display: none">
         Hire Farmer (15🪙)
       </button>
       <button id="buy-farm-btn" style="display: none">Buy Farm (100🪙)</button>
       <button id="buy-farm2-btn" style="display: none">Buy Farm (1000🪙)</button>
+      <button id="buy-farm3-btn" style="display: none">Buy Farm (2500🪙)</button>
+      <button id="buy-farm4-btn" style="display: none">Buy Farm (10000🪙)</button>
     </div>
     <div id="container">
       <h1 id="cage-heading">⛓Chicken</h1>
@@ -153,6 +177,28 @@
       <span id="farm2-chicken-type">No chickens</span>
       <button id="assign2-ground-btn">Assign Ground Chickens</button>
     </div>
+    <div id="farm3" style="display: none">
+      <h2>Farm 3</h2>
+      <span id="farm3-farmer-count">Farmers: 0</span>
+      <button id="assign3-farmer-btn">Assign Farmer</button><br />
+      <span id="farm3-merchant-count">Merchants: 0</span>
+      <button id="assign3-merchant-btn">Assign Merchant</button><br />
+      <span id="farm3-manager-status">Manager: 0</span>
+      <button id="hire-manager3-btn">Hire Manager (100000🪙)</button><br />
+      <span id="farm3-chicken-type">No chickens</span>
+      <button id="assign3-free-btn">Assign Free Chickens</button>
+    </div>
+    <div id="farm4" style="display: none">
+      <h2>Farm 4</h2>
+      <span id="farm4-farmer-count">Farmers: 0</span>
+      <button id="assign4-farmer-btn">Assign Farmer</button><br />
+      <span id="farm4-merchant-count">Merchants: 0</span>
+      <button id="assign4-merchant-btn">Assign Merchant</button><br />
+      <span id="farm4-manager-status">Manager: 0</span>
+      <button id="hire-manager4-btn">Hire Manager (1000000🪙)</button><br />
+      <span id="farm4-chicken-type">No chickens</span>
+      <button id="assign4-bio-btn">Assign Bio Chickens</button>
+    </div>
     <button id="reset-btn">Reset</button>
     <div id="banner"></div>
     <script>
@@ -164,31 +210,57 @@
       const merchantBtn = document.getElementById("merchant-btn");
       const buyChickenBtn = document.getElementById("buy-chicken-btn");
       const buyGroundChickenBtn = document.getElementById("buy-ground-chicken-btn");
+      const buyFreeChickenBtn = document.getElementById("buy-free-chicken-btn");
+      const buyBioChickenBtn = document.getElementById("buy-bio-chicken-btn");
       const chickenCountEl = document.getElementById("chicken-count");
       const groundEggCountEl = document.getElementById("ground-egg-count");
+      const freeEggCountEl = document.getElementById("free-egg-count");
+      const bioEggCountEl = document.getElementById("bio-egg-count");
       const sellGroundBtn = document.getElementById("sell-ground-btn");
+      const sellFreeBtn = document.getElementById("sell-free-btn");
+      const sellBioBtn = document.getElementById("sell-bio-btn");
       const farmerBtn = document.getElementById("farmer-btn");
       const farmerCountEl = document.getElementById("farmer-count");
       const buyFarmBtn = document.getElementById("buy-farm-btn");
       const buyFarm2Btn = document.getElementById("buy-farm2-btn");
+      const buyFarm3Btn = document.getElementById("buy-farm3-btn");
+      const buyFarm4Btn = document.getElementById("buy-farm4-btn");
       const farmEl = document.getElementById("farm");
       const farm2El = document.getElementById("farm2");
+      const farm3El = document.getElementById("farm3");
+      const farm4El = document.getElementById("farm4");
       const assignFarmerBtn = document.getElementById("assign-farmer-btn");
       const assignMerchantBtn = document.getElementById("assign-merchant-btn");
       const assignChickenBtn = document.getElementById("assign-chicken-btn");
       const assign2FarmerBtn = document.getElementById("assign2-farmer-btn");
       const assign2MerchantBtn = document.getElementById("assign2-merchant-btn");
       const assign2GroundBtn = document.getElementById("assign2-ground-btn");
+      const assign3FarmerBtn = document.getElementById("assign3-farmer-btn");
+      const assign3MerchantBtn = document.getElementById("assign3-merchant-btn");
+      const assign3FreeBtn = document.getElementById("assign3-free-btn");
+      const assign4FarmerBtn = document.getElementById("assign4-farmer-btn");
+      const assign4MerchantBtn = document.getElementById("assign4-merchant-btn");
+      const assign4BioBtn = document.getElementById("assign4-bio-btn");
       const hireManagerBtn = document.getElementById("hire-manager-btn");
       const hireManager2Btn = document.getElementById("hire-manager2-btn");
+      const hireManager3Btn = document.getElementById("hire-manager3-btn");
+      const hireManager4Btn = document.getElementById("hire-manager4-btn");
       const farmManagerStatusEl = document.getElementById("farm-manager-status");
       const farm2ManagerStatusEl = document.getElementById("farm2-manager-status");
+      const farm3ManagerStatusEl = document.getElementById("farm3-manager-status");
+      const farm4ManagerStatusEl = document.getElementById("farm4-manager-status");
       const farmFarmerCountEl = document.getElementById("farm-farmer-count");
       const farmMerchantCountEl = document.getElementById("farm-merchant-count");
       const farmChickenTypeEl = document.getElementById("farm-chicken-type");
       const farm2FarmerCountEl = document.getElementById("farm2-farmer-count");
       const farm2MerchantCountEl = document.getElementById("farm2-merchant-count");
       const farm2ChickenTypeEl = document.getElementById("farm2-chicken-type");
+      const farm3FarmerCountEl = document.getElementById("farm3-farmer-count");
+      const farm3MerchantCountEl = document.getElementById("farm3-merchant-count");
+      const farm3ChickenTypeEl = document.getElementById("farm3-chicken-type");
+      const farm4FarmerCountEl = document.getElementById("farm4-farmer-count");
+      const farm4MerchantCountEl = document.getElementById("farm4-merchant-count");
+      const farm4ChickenTypeEl = document.getElementById("farm4-chicken-type");
       const bannerEl = document.getElementById("banner");
       let count = 0;
       let gold = 0;
@@ -211,14 +283,34 @@
       let groundEggCount = 0;
       let groundChickenCount = 0;
       let buyGroundChickenVisible = false;
+      let freeEggCount = 0;
+      let freeChickenCount = 0;
+      let buyFreeChickenVisible = false;
+      let bioEggCount = 0;
+      let bioChickenCount = 0;
+      let buyBioChickenVisible = false;
       let farm2Built = false;
       let farm2Farmers = 0;
       let farm2Merchants = 0;
       let farm2ChickenAssigned = false;
       let farm2ChickenCount = 0;
       let farm2Multiplier = 1;
+      let farm3Built = false;
+      let farm3Farmers = 0;
+      let farm3Merchants = 0;
+      let farm3ChickenAssigned = false;
+      let farm3ChickenCount = 0;
+      let farm3Multiplier = 1;
+      let farm4Built = false;
+      let farm4Farmers = 0;
+      let farm4Merchants = 0;
+      let farm4ChickenAssigned = false;
+      let farm4ChickenCount = 0;
+      let farm4Multiplier = 1;
       let farmManagerHired = false;
       let farm2ManagerHired = false;
+      let farm3ManagerHired = false;
+      let farm4ManagerHired = false;
       let managersBought = 0;
       let managerCost = 1000;
       let merchantCost = 5;
@@ -247,14 +339,34 @@
           groundEggCount,
           groundChickenCount,
           buyGroundChickenVisible,
+          freeEggCount,
+          freeChickenCount,
+          buyFreeChickenVisible,
+          bioEggCount,
+          bioChickenCount,
+          buyBioChickenVisible,
           farm2Built,
           farm2Farmers,
           farm2Merchants,
           farm2ChickenAssigned,
           farm2ChickenCount,
           farm2Multiplier,
+          farm3Built,
+          farm3Farmers,
+          farm3Merchants,
+          farm3ChickenAssigned,
+          farm3ChickenCount,
+          farm3Multiplier,
+          farm4Built,
+          farm4Farmers,
+          farm4Merchants,
+          farm4ChickenAssigned,
+          farm4ChickenCount,
+          farm4Multiplier,
           farmManagerHired,
           farm2ManagerHired,
+          farm3ManagerHired,
+          farm4ManagerHired,
           managersBought,
           managerCost,
           merchantCost,
@@ -287,14 +399,34 @@
           groundEggCount = s.groundEggCount || 0;
           groundChickenCount = s.groundChickenCount || 0;
           buyGroundChickenVisible = s.buyGroundChickenVisible || false;
+          freeEggCount = s.freeEggCount || 0;
+          freeChickenCount = s.freeChickenCount || 0;
+          buyFreeChickenVisible = s.buyFreeChickenVisible || false;
+          bioEggCount = s.bioEggCount || 0;
+          bioChickenCount = s.bioChickenCount || 0;
+          buyBioChickenVisible = s.buyBioChickenVisible || false;
           farm2Built = s.farm2Built || false;
           farm2Farmers = s.farm2Farmers || 0;
           farm2Merchants = s.farm2Merchants || 0;
           farm2ChickenAssigned = s.farm2ChickenAssigned || false;
           farm2ChickenCount = s.farm2ChickenCount || 0;
           farm2Multiplier = s.farm2Multiplier || 1;
+          farm3Built = s.farm3Built || false;
+          farm3Farmers = s.farm3Farmers || 0;
+          farm3Merchants = s.farm3Merchants || 0;
+          farm3ChickenAssigned = s.farm3ChickenAssigned || false;
+          farm3ChickenCount = s.farm3ChickenCount || 0;
+          farm3Multiplier = s.farm3Multiplier || 1;
+          farm4Built = s.farm4Built || false;
+          farm4Farmers = s.farm4Farmers || 0;
+          farm4Merchants = s.farm4Merchants || 0;
+          farm4ChickenAssigned = s.farm4ChickenAssigned || false;
+          farm4ChickenCount = s.farm4ChickenCount || 0;
+          farm4Multiplier = s.farm4Multiplier || 1;
           farmManagerHired = s.farmManagerHired || false;
           farm2ManagerHired = s.farm2ManagerHired || false;
+          farm3ManagerHired = s.farm3ManagerHired || false;
+          farm4ManagerHired = s.farm4ManagerHired || false;
           managersBought = s.managersBought || 0;
           managerCost = s.managerCost || 1000;
           merchantCost = s.merchantCost || 5;
@@ -302,13 +434,27 @@
           merchantBtn.style.display = merchantVisible ? "inline" : "none";
           buyChickenBtn.style.display = buyChickenVisible ? "inline" : "none";
           buyGroundChickenBtn.style.display = buyGroundChickenVisible ? "inline" : "none";
+          buyFreeChickenBtn.style.display = buyFreeChickenVisible ? "inline" : "none";
+          buyBioChickenBtn.style.display = buyBioChickenVisible ? "inline" : "none";
           farmerBtn.style.display = farmerVisible ? "inline" : "none";
           if (farm2Built || progressStage < 5) {
             buyFarm2Btn.style.display = "none";
           } else {
             buyFarm2Btn.style.display = gold >= 1000 ? "inline" : "none";
           }
+          if (farm3Built || progressStage < 6) {
+            buyFarm3Btn.style.display = "none";
+          } else {
+            buyFarm3Btn.style.display = gold >= 2500 ? "inline" : "none";
+          }
+          if (farm4Built || progressStage < 7) {
+            buyFarm4Btn.style.display = "none";
+          } else {
+            buyFarm4Btn.style.display = gold >= 10000 ? "inline" : "none";
+          }
           farm2El.style.display = farm2Built ? "block" : "none";
+          farm3El.style.display = farm3Built ? "block" : "none";
+          farm4El.style.display = farm4Built ? "block" : "none";
           document.getElementById("container").style.display = farmChickenAssigned ? "none" : "block";
         }
       }
@@ -325,6 +471,10 @@
         eggCountEl.textContent = "⛓-Egg: " + count;
         groundEggCountEl.textContent = "Ground Egg: " + groundEggCount;
         groundEggCountEl.style.display = groundEggCount > 0 ? "block" : "none";
+        freeEggCountEl.textContent = "Free Egg: " + freeEggCount;
+        freeEggCountEl.style.display = freeEggCount > 0 ? "block" : "none";
+        bioEggCountEl.textContent = "Bio Egg: " + bioEggCount;
+        bioEggCountEl.style.display = bioEggCount > 0 ? "block" : "none";
         merchantBtn.textContent = `Hire Merchant (${merchantCost}🪙)`;
         farmerBtn.textContent = `Hire Farmer (${farmerCost}🪙)`;
         if (merchantCount > 0) {
@@ -387,9 +537,37 @@
           } else {
             buyFarm2Btn.style.display = "none";
           }
+          if (farm3ChickenAssigned) {
+            buyFreeChickenBtn.style.display = "none";
+            buyFreeChickenVisible = false;
+          } else if (!buyFreeChickenVisible) {
+            buyFreeChickenBtn.style.display = "inline";
+            buyFreeChickenVisible = true;
+          }
+          if (!farm3Built) {
+            buyFarm3Btn.style.display = gold >= 2500 ? "inline" : "none";
+          } else {
+            buyFarm3Btn.style.display = "none";
+          }
+          if (farm4ChickenAssigned) {
+            buyBioChickenBtn.style.display = "none";
+            buyBioChickenVisible = false;
+          } else if (!buyBioChickenVisible && progressStage >= 7) {
+            buyBioChickenBtn.style.display = "inline";
+            buyBioChickenVisible = true;
+          }
+          if (progressStage >= 7) {
+            if (!farm4Built) {
+              buyFarm4Btn.style.display = gold >= 10000 ? "inline" : "none";
+            } else {
+              buyFarm4Btn.style.display = "none";
+            }
+          }
         }
         hireManagerBtn.textContent = `Hire Manager (${managerCost}🪙)`;
         hireManager2Btn.textContent = `Hire Manager (${managerCost}🪙)`;
+        hireManager3Btn.textContent = `Hire Manager (${managerCost}🪙)`;
+        hireManager4Btn.textContent = `Hire Manager (${managerCost}🪙)`;
         hireManagerBtn.style.display =
           farmBuilt && !farmManagerHired && gold >= managerCost
             ? "inline"
@@ -398,15 +576,39 @@
           farm2Built && !farm2ManagerHired && gold >= managerCost
             ? "inline"
             : "none";
+        hireManager3Btn.style.display =
+          farm3Built && !farm3ManagerHired && gold >= managerCost
+            ? "inline"
+            : "none";
+        hireManager4Btn.style.display =
+          farm4Built && !farm4ManagerHired && gold >= managerCost
+            ? "inline"
+            : "none";
         farmManagerStatusEl.textContent =
           "Manager: " + (farmManagerHired ? 1 : 0);
         farm2ManagerStatusEl.textContent =
           "Manager: " + (farm2ManagerHired ? 1 : 0);
+        farm3ManagerStatusEl.textContent =
+          "Manager: " + (farm3ManagerHired ? 1 : 0);
+        farm4ManagerStatusEl.textContent =
+          "Manager: " + (farm4ManagerHired ? 1 : 0);
         farm2El.style.display = farm2Built ? "block" : "none";
+        farm3El.style.display = farm3Built ? "block" : "none";
+        farm4El.style.display = farm4Built ? "block" : "none";
         farm2FarmerCountEl.textContent = "Farmers: " + farm2Farmers;
         farm2MerchantCountEl.textContent = "Merchants: " + farm2Merchants;
         farm2ChickenTypeEl.textContent = farm2ChickenAssigned
           ? "Ground Chickens"
+          : "No chickens";
+        farm3FarmerCountEl.textContent = "Farmers: " + farm3Farmers;
+        farm3MerchantCountEl.textContent = "Merchants: " + farm3Merchants;
+        farm3ChickenTypeEl.textContent = farm3ChickenAssigned
+          ? "Free Chickens"
+          : "No chickens";
+        farm4FarmerCountEl.textContent = "Farmers: " + farm4Farmers;
+        farm4MerchantCountEl.textContent = "Merchants: " + farm4Merchants;
+        farm4ChickenTypeEl.textContent = farm4ChickenAssigned
+          ? "Bio Chickens"
           : "No chickens";
         farmEl.style.display = farmBuilt ? "block" : "none";
         farmFarmerCountEl.textContent = "Farmers: " + farmFarmers;
@@ -421,6 +623,8 @@
           farmerCost = 30;
         }
         sellGroundBtn.style.display = groundEggCount >= 8 ? "inline" : "none";
+        sellFreeBtn.style.display = freeEggCount >= 8 ? "inline" : "none";
+        sellBioBtn.style.display = bioEggCount >= 8 ? "inline" : "none";
         saveGame();
       }
 
@@ -476,6 +680,20 @@
           updateDisplays();
         }
       });
+      sellFreeBtn.addEventListener("click", () => {
+        if (freeEggCount >= 8) {
+          freeEggCount -= 8;
+          gold += 5;
+          updateDisplays();
+        }
+      });
+      sellBioBtn.addEventListener("click", () => {
+        if (bioEggCount >= 8) {
+          bioEggCount -= 8;
+          gold += 12;
+          updateDisplays();
+        }
+      });
 
       merchantBtn.addEventListener("click", () => {
         if (gold >= merchantCost) {
@@ -528,6 +746,34 @@
           updateDisplays();
         }
       });
+      buyFreeChickenBtn.addEventListener("click", () => {
+        if (gold >= 2500) {
+          gold -= 2500;
+          if (farm3ChickenAssigned) {
+            farm3ChickenCount += 1;
+          } else {
+            freeChickenCount += 1;
+          }
+          if (progressStage === 6) {
+            progressStage += 1;
+          }
+          updateDisplays();
+        }
+      });
+      buyBioChickenBtn.addEventListener("click", () => {
+        if (gold >= 7500) {
+          gold -= 7500;
+          if (farm4ChickenAssigned) {
+            farm4ChickenCount += 1;
+          } else {
+            bioChickenCount += 1;
+          }
+          if (progressStage === 7) {
+            progressStage += 1;
+          }
+          updateDisplays();
+        }
+      });
 
       buyFarmBtn.addEventListener("click", () => {
         if (gold >= 100 && !farmBuilt) {
@@ -542,6 +788,20 @@
         if (gold >= 1000 && !farm2Built) {
           gold -= 1000;
           farm2Built = true;
+          updateDisplays();
+        }
+      });
+      buyFarm3Btn.addEventListener("click", () => {
+        if (gold >= 2500 && !farm3Built) {
+          gold -= 2500;
+          farm3Built = true;
+          updateDisplays();
+        }
+      });
+      buyFarm4Btn.addEventListener("click", () => {
+        if (gold >= 10000 && !farm4Built) {
+          gold -= 10000;
+          farm4Built = true;
           updateDisplays();
         }
       });
@@ -598,6 +858,52 @@
           updateDisplays();
         }
       });
+      assign3FarmerBtn.addEventListener("click", () => {
+        if (farmerCount > 0 && farm3Built) {
+          farmerCount -= 1;
+          farm3Farmers += 1;
+          updateDisplays();
+        }
+      });
+      assign3MerchantBtn.addEventListener("click", () => {
+        if (merchantCount > 0 && farm3Built) {
+          merchantCount -= 1;
+          farm3Merchants += 1;
+          updateDisplays();
+        }
+      });
+      assign3FreeBtn.addEventListener("click", () => {
+        if (farm3Built && !farm3ChickenAssigned && freeChickenCount > 0) {
+          farm3ChickenAssigned = true;
+          farm3ChickenCount += freeChickenCount;
+          freeChickenCount = 0;
+          farm3Multiplier = 1.15 * (farm3ManagerHired ? 2 : 1);
+          updateDisplays();
+        }
+      });
+      assign4FarmerBtn.addEventListener("click", () => {
+        if (farmerCount > 0 && farm4Built) {
+          farmerCount -= 1;
+          farm4Farmers += 1;
+          updateDisplays();
+        }
+      });
+      assign4MerchantBtn.addEventListener("click", () => {
+        if (merchantCount > 0 && farm4Built) {
+          merchantCount -= 1;
+          farm4Merchants += 1;
+          updateDisplays();
+        }
+      });
+      assign4BioBtn.addEventListener("click", () => {
+        if (farm4Built && !farm4ChickenAssigned && bioChickenCount > 0) {
+          farm4ChickenAssigned = true;
+          farm4ChickenCount += bioChickenCount;
+          bioChickenCount = 0;
+          farm4Multiplier = 1.15 * (farm4ManagerHired ? 2 : 1);
+          updateDisplays();
+        }
+      });
 
       hireManagerBtn.addEventListener("click", () => {
         if (farmBuilt && !farmManagerHired && gold >= managerCost) {
@@ -617,6 +923,26 @@
           managersBought += 1;
           managerCost *= 10;
           farm2Multiplier *= 2;
+          updateDisplays();
+        }
+      });
+      hireManager3Btn.addEventListener("click", () => {
+        if (farm3Built && !farm3ManagerHired && gold >= managerCost) {
+          gold -= managerCost;
+          farm3ManagerHired = true;
+          managersBought += 1;
+          managerCost *= 10;
+          farm3Multiplier *= 2;
+          updateDisplays();
+        }
+      });
+      hireManager4Btn.addEventListener("click", () => {
+        if (farm4Built && !farm4ManagerHired && gold >= managerCost) {
+          gold -= managerCost;
+          farm4ManagerHired = true;
+          managersBought += 1;
+          managerCost *= 10;
+          farm4Multiplier *= 2;
           updateDisplays();
         }
       });
@@ -640,28 +966,54 @@
         chapter2Shown = false;
       chapter1Shown = false;
         farmChickenCount = 0;
-        groundEggCount = 0;
-        groundChickenCount = 0;
-        buyGroundChickenVisible = false;
-        farm2Built = false;
-        farm2Farmers = 0;
-        farm2Merchants = 0;
-        farm2ChickenAssigned = false;
-        farm2ChickenCount = 0;
-        farm2Multiplier = 1;
-        farmManagerHired = false;
-        farm2ManagerHired = false;
-        managersBought = 0;
-        managerCost = 1000;
-        merchantCost = 5;
-        farmerCost = 15;
+       groundEggCount = 0;
+       groundChickenCount = 0;
+       buyGroundChickenVisible = false;
+        freeEggCount = 0;
+        freeChickenCount = 0;
+        buyFreeChickenVisible = false;
+        bioEggCount = 0;
+        bioChickenCount = 0;
+        buyBioChickenVisible = false;
+       farm2Built = false;
+       farm2Farmers = 0;
+       farm2Merchants = 0;
+       farm2ChickenAssigned = false;
+       farm2ChickenCount = 0;
+       farm2Multiplier = 1;
+        farm3Built = false;
+        farm3Farmers = 0;
+        farm3Merchants = 0;
+        farm3ChickenAssigned = false;
+        farm3ChickenCount = 0;
+        farm3Multiplier = 1;
+        farm4Built = false;
+        farm4Farmers = 0;
+        farm4Merchants = 0;
+        farm4ChickenAssigned = false;
+        farm4ChickenCount = 0;
+        farm4Multiplier = 1;
+       farmManagerHired = false;
+       farm2ManagerHired = false;
+        farm3ManagerHired = false;
+        farm4ManagerHired = false;
+       managersBought = 0;
+       managerCost = 1000;
+       merchantCost = 5;
+       farmerCost = 15;
         document.getElementById("container").style.display = "block";
         merchantBtn.style.display = "none";
         buyChickenBtn.style.display = "none";
         buyGroundChickenBtn.style.display = "none";
+        buyFreeChickenBtn.style.display = "none";
+        buyBioChickenBtn.style.display = "none";
         farmerBtn.style.display = "none";
         buyFarm2Btn.style.display = "none";
+        buyFarm3Btn.style.display = "none";
+        buyFarm4Btn.style.display = "none";
         farm2El.style.display = "none";
+        farm3El.style.display = "none";
+        farm4El.style.display = "none";
         updateDisplays();
         showBanner("Chapter 1: Egg or Chicken?");
         chapter1Shown = true;
@@ -693,11 +1045,31 @@
           spawnEgg(produced2);
           updateDisplays();
         }
+        if (farm3Built && farm3ChickenAssigned && farm3Farmers > 0) {
+          const produced3 = Math.round(farm3Farmers * farm3Multiplier);
+          freeEggCount += produced3;
+          if (freeEggCount >= 8) {
+            sellFreeBtn.style.display = "inline";
+          }
+          spawnEgg(produced3);
+          updateDisplays();
+        }
+        if (farm4Built && farm4ChickenAssigned && farm4Farmers > 0) {
+          const produced4 = Math.round(farm4Farmers * farm4Multiplier);
+          bioEggCount += produced4;
+          if (bioEggCount >= 8) {
+            sellBioBtn.style.display = "inline";
+          }
+          spawnEgg(produced4);
+          updateDisplays();
+        }
       }, 1000);
 
       setInterval(() => {
         const regMerchants = merchantCount + farmMerchants;
         const groundMerchants = farm2Merchants;
+        const freeMerchants = farm3Merchants;
+        const bioMerchants = farm4Merchants;
         const possibleSales = Math.floor(count / 8);
         const regSales = Math.min(possibleSales, regMerchants);
         if (regSales > 0) {
@@ -710,7 +1082,19 @@
           groundEggCount -= groundSales * 8;
           gold += groundSales * 2;
         }
-        if (regSales > 0 || groundSales > 0) {
+        const possibleFree = Math.floor(freeEggCount / 8);
+        const freeSales = Math.min(possibleFree, freeMerchants);
+        if (freeSales > 0) {
+          freeEggCount -= freeSales * 8;
+          gold += freeSales * 5;
+        }
+        const possibleBio = Math.floor(bioEggCount / 8);
+        const bioSales = Math.min(possibleBio, bioMerchants);
+        if (bioSales > 0) {
+          bioEggCount -= bioSales * 8;
+          gold += bioSales * 12;
+        }
+        if (regSales > 0 || groundSales > 0 || freeSales > 0 || bioSales > 0) {
           updateDisplays();
         }
       }, 5000);
