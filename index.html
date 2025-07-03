@@ -87,6 +87,12 @@
       padding: 10px;
       display: none;
     }
+    #reset-btn {
+      position: fixed;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
     </style>
   </head>
   <body>
@@ -162,6 +168,38 @@
       let farmChickenCount = 0;
       let clickInterval;
 
+      function saveGame() {
+        const state = { count, gold, merchantCount, merchantVisible, chickenCount, buyChickenVisible, farmerCount, farmerVisible, progressStage, farmBuilt, farmFarmers, farmMerchants, farmChickenAssigned, farmMultiplier, chapter2Shown, farmChickenCount };
+        localStorage.setItem("gameState", JSON.stringify(state));
+      }
+
+      function loadGame() {
+        const saved = localStorage.getItem("gameState");
+        if (saved) {
+          const s = JSON.parse(saved);
+          count = s.count;
+          gold = s.gold;
+          merchantCount = s.merchantCount;
+          merchantVisible = s.merchantVisible;
+          chickenCount = s.chickenCount;
+          buyChickenVisible = s.buyChickenVisible;
+          farmerCount = s.farmerCount;
+          farmerVisible = s.farmerVisible;
+          progressStage = s.progressStage;
+          farmBuilt = s.farmBuilt;
+          farmFarmers = s.farmFarmers;
+          farmMerchants = s.farmMerchants;
+          farmChickenAssigned = s.farmChickenAssigned;
+          farmMultiplier = s.farmMultiplier;
+          chapter2Shown = s.chapter2Shown;
+          farmChickenCount = s.farmChickenCount;
+          merchantBtn.style.display = merchantVisible ? "inline" : "none";
+          buyChickenBtn.style.display = buyChickenVisible ? "inline" : "none";
+          farmerBtn.style.display = farmerVisible ? "inline" : "none";
+          document.getElementById("container").style.display = farmChickenAssigned ? "none" : "block";
+        }
+      }
+
       function showBanner(text) {
         bannerEl.textContent = text;
         bannerEl.style.display = "block";
@@ -223,9 +261,11 @@
           showBanner("Kapitel 2: Markteinführung");
           chapter2Shown = true;
         }
+        saveGame();
       }
 
       // Initial display update
+      loadGame();
       updateDisplays();
 
       function spawnEgg(amount) {
@@ -338,6 +378,30 @@
         }
       });
 
+      document.getElementById("reset-btn").addEventListener("click", () => {
+        localStorage.removeItem("gameState");
+        count = 0;
+        gold = 0;
+        merchantCount = 0;
+        merchantVisible = false;
+        chickenCount = 1;
+        buyChickenVisible = false;
+        farmerCount = 0;
+        farmerVisible = false;
+        progressStage = 0;
+        farmBuilt = false;
+        farmFarmers = 0;
+        farmMerchants = 0;
+        farmChickenAssigned = false;
+        farmMultiplier = 1;
+        chapter2Shown = false;
+        farmChickenCount = 0;
+        document.getElementById("container").style.display = "block";
+        merchantBtn.style.display = "none";
+        buyChickenBtn.style.display = "none";
+        farmerBtn.style.display = "none";
+        updateDisplays();
+      });
       setInterval(() => {
         if (farmerCount > 0 && chickenCount > 0) {
           count += farmerCount;
@@ -368,5 +432,6 @@
         }
       }, 5000);
     </script>
+    <button id="reset-btn">Reset</button>
   </body>
 </html>
