@@ -280,7 +280,11 @@
           buyChickenBtn.style.display = buyChickenVisible ? "inline" : "none";
           buyGroundChickenBtn.style.display = buyGroundChickenVisible ? "inline" : "none";
           farmerBtn.style.display = farmerVisible ? "inline" : "none";
-          buyFarm2Btn.style.display = farm2Built ? "none" : "inline";
+          if (farm2Built || progressStage < 5) {
+            buyFarm2Btn.style.display = "none";
+          } else {
+            buyFarm2Btn.style.display = gold >= 1000 ? "inline" : "none";
+          }
           farm2El.style.display = farm2Built ? "block" : "none";
           document.getElementById("container").style.display = farmChickenAssigned ? "none" : "block";
         }
