@@ -686,17 +686,16 @@
       }, 1000);
 
       setInterval(() => {
-        const merchants = merchantCount + farmMerchants + farm2Merchants;
-        let sales = merchants;
+        const regMerchants = merchantCount + farmMerchants;
+        const groundMerchants = farm2Merchants;
         const possibleSales = Math.floor(count / 8);
-        const regSales = Math.min(possibleSales, sales);
+        const regSales = Math.min(possibleSales, regMerchants);
         if (regSales > 0) {
           count -= regSales * 8;
           gold += regSales;
-          sales -= regSales;
         }
         const possibleGround = Math.floor(groundEggCount / 8);
-        const groundSales = Math.min(possibleGround, sales);
+        const groundSales = Math.min(possibleGround, groundMerchants);
         if (groundSales > 0) {
           groundEggCount -= groundSales * 8;
           gold += groundSales * 2;
