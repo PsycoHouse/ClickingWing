@@ -101,6 +101,7 @@
       <span id="gold-count">🪙 0</span>
       <span id="merchant-count" style="display: none">Händler: 0</span>
       <span id="chicken-count" style="display: none">⛓-Hühner: 1</span>
+      <span id="ground-egg-count" style="display: none">Boden-Ei: 0</span>
       <span id="farmer-count" style="display: none">Farmer: 0</span>
     </div>
 
@@ -109,11 +110,14 @@
         Händler anheuern (5🪙)
       </button>
       <button id="buy-chicken-btn" style="display: none">⛓-Huhn kaufen</button>
+      <button id="buy-ground-chicken-btn" style="display: none">Bodenhaltung-Huhn kaufen (250🪙)</button>
       <button id="sell-btn" style="display: none">8 Eier verkaufen</button>
+      <button id="sell-ground-btn" style="display: none">8 Boden-Eier verkaufen</button>
       <button id="farmer-btn" style="display: none">
         Farmer anheuern (15🪙)
       </button>
       <button id="buy-farm-btn" style="display: none">Bauernhof kaufen (100🪙)</button>
+      <button id="buy-farm2-btn" style="display: none">Bauernhof kaufen (1000🪙)</button>
     </div>
     <div id="container">
       <h1 id="cage-heading">⛓fighaltung</h1>
@@ -128,6 +132,15 @@
       <span id="farm-chicken-type">Keine Hühner</span>
       <button id="assign-chicken-btn">⛓-Hühner zuweisen</button>
     </div>
+    <div id="farm2" style="display: none">
+      <h2>Bauernhof 2</h2>
+      <span id="farm2-farmer-count">Farmer: 0</span>
+      <button id="assign2-farmer-btn">Farmer zuweisen</button><br />
+      <span id="farm2-merchant-count">Händler: 0</span>
+      <button id="assign2-merchant-btn">Händler zuweisen</button><br />
+      <span id="farm2-chicken-type">Keine Hühner</span>
+      <button id="assign2-ground-btn">Bodenhaltung-Hühner zuweisen</button>
+    </div>
     <div id="banner"></div>
     <script>
       const chicken = document.getElementById("chicken");
@@ -137,17 +150,28 @@
       const goldCountEl = document.getElementById("gold-count");
       const merchantBtn = document.getElementById("merchant-btn");
       const buyChickenBtn = document.getElementById("buy-chicken-btn");
+      const buyGroundChickenBtn = document.getElementById("buy-ground-chicken-btn");
       const chickenCountEl = document.getElementById("chicken-count");
+      const groundEggCountEl = document.getElementById("ground-egg-count");
+      const sellGroundBtn = document.getElementById("sell-ground-btn");
       const farmerBtn = document.getElementById("farmer-btn");
       const farmerCountEl = document.getElementById("farmer-count");
       const buyFarmBtn = document.getElementById("buy-farm-btn");
+      const buyFarm2Btn = document.getElementById("buy-farm2-btn");
       const farmEl = document.getElementById("farm");
+      const farm2El = document.getElementById("farm2");
       const assignFarmerBtn = document.getElementById("assign-farmer-btn");
       const assignMerchantBtn = document.getElementById("assign-merchant-btn");
       const assignChickenBtn = document.getElementById("assign-chicken-btn");
+      const assign2FarmerBtn = document.getElementById("assign2-farmer-btn");
+      const assign2MerchantBtn = document.getElementById("assign2-merchant-btn");
+      const assign2GroundBtn = document.getElementById("assign2-ground-btn");
       const farmFarmerCountEl = document.getElementById("farm-farmer-count");
       const farmMerchantCountEl = document.getElementById("farm-merchant-count");
       const farmChickenTypeEl = document.getElementById("farm-chicken-type");
+      const farm2FarmerCountEl = document.getElementById("farm2-farmer-count");
+      const farm2MerchantCountEl = document.getElementById("farm2-merchant-count");
+      const farm2ChickenTypeEl = document.getElementById("farm2-chicken-type");
       const bannerEl = document.getElementById("banner");
       let count = 0;
       let gold = 0;
@@ -158,7 +182,7 @@
       let farmerCount = 0;
       let farmerVisible = false;
       let progressStage = 0;
-      const progressGoals = [5, 10, 15, 100];
+      const progressGoals = [5, 10, 15, 100, 250];
       let farmBuilt = false;
       let farmFarmers = 0;
       let farmMerchants = 0;
@@ -166,10 +190,49 @@
       let farmMultiplier = 1;
       let chapter2Shown = false;
       let farmChickenCount = 0;
+      let groundEggCount = 0;
+      let groundChickenCount = 0;
+      let buyGroundChickenVisible = false;
+      let farm2Built = false;
+      let farm2Farmers = 0;
+      let farm2Merchants = 0;
+      let farm2ChickenAssigned = false;
+      let farm2ChickenCount = 0;
+      let farm2Multiplier = 1;
+      let merchantCost = 5;
+      let farmerCost = 15;
       let clickInterval;
 
       function saveGame() {
-        const state = { count, gold, merchantCount, merchantVisible, chickenCount, buyChickenVisible, farmerCount, farmerVisible, progressStage, farmBuilt, farmFarmers, farmMerchants, farmChickenAssigned, farmMultiplier, chapter2Shown, farmChickenCount };
+        const state = {
+          count,
+          gold,
+          merchantCount,
+          merchantVisible,
+          chickenCount,
+          buyChickenVisible,
+          farmerCount,
+          farmerVisible,
+          progressStage,
+          farmBuilt,
+          farmFarmers,
+          farmMerchants,
+          farmChickenAssigned,
+          farmMultiplier,
+          chapter2Shown,
+          farmChickenCount,
+          groundEggCount,
+          groundChickenCount,
+          buyGroundChickenVisible,
+          farm2Built,
+          farm2Farmers,
+          farm2Merchants,
+          farm2ChickenAssigned,
+          farm2ChickenCount,
+          farm2Multiplier,
+          merchantCost,
+          farmerCost
+        };
         localStorage.setItem("gameState", JSON.stringify(state));
       }
 
@@ -193,9 +256,23 @@
           farmMultiplier = s.farmMultiplier;
           chapter2Shown = s.chapter2Shown;
           farmChickenCount = s.farmChickenCount;
+          groundEggCount = s.groundEggCount || 0;
+          groundChickenCount = s.groundChickenCount || 0;
+          buyGroundChickenVisible = s.buyGroundChickenVisible || false;
+          farm2Built = s.farm2Built || false;
+          farm2Farmers = s.farm2Farmers || 0;
+          farm2Merchants = s.farm2Merchants || 0;
+          farm2ChickenAssigned = s.farm2ChickenAssigned || false;
+          farm2ChickenCount = s.farm2ChickenCount || 0;
+          farm2Multiplier = s.farm2Multiplier || 1;
+          merchantCost = s.merchantCost || 5;
+          farmerCost = s.farmerCost || 15;
           merchantBtn.style.display = merchantVisible ? "inline" : "none";
           buyChickenBtn.style.display = buyChickenVisible ? "inline" : "none";
+          buyGroundChickenBtn.style.display = buyGroundChickenVisible ? "inline" : "none";
           farmerBtn.style.display = farmerVisible ? "inline" : "none";
+          buyFarm2Btn.style.display = farm2Built ? "none" : "inline";
+          farm2El.style.display = farm2Built ? "block" : "none";
           document.getElementById("container").style.display = farmChickenAssigned ? "none" : "block";
         }
       }
@@ -210,6 +287,10 @@
 
       function updateDisplays() {
         eggCountEl.textContent = "⛓-Ei: " + count;
+        groundEggCountEl.textContent = "Boden-Ei: " + groundEggCount;
+        groundEggCountEl.style.display = groundEggCount > 0 ? "block" : "none";
+        merchantBtn.textContent = `Händler anheuern (${merchantCost}🪙)`;
+        farmerBtn.textContent = `Farmer anheuern (${farmerCost}🪙)`;
         if (merchantCount > 0) {
           merchantCountEl.style.display = "block";
           merchantCountEl.textContent = "Händler: " + merchantCount;
@@ -234,7 +315,7 @@
         } else {
           goldCountEl.textContent = "🪙 " + gold;
         }
-        if (!merchantVisible && gold >= 5) {
+        if (!merchantVisible && gold >= merchantCost) {
           merchantBtn.style.display = "inline";
           merchantVisible = true;
         }
@@ -242,7 +323,7 @@
           buyChickenBtn.style.display = "inline";
           buyChickenVisible = true;
         }
-        if (!farmerVisible && gold >= 15) {
+        if (!farmerVisible && gold >= farmerCost) {
           farmerBtn.style.display = "inline";
           farmerVisible = true;
         }
@@ -251,6 +332,26 @@
         } else {
           buyFarmBtn.style.display = "none";
         }
+        if (progressStage === 4 && gold >= progressGoals[4]) {
+          progressStage += 1;
+        }
+        if (progressStage >= 5) {
+          if (!buyGroundChickenVisible) {
+            buyGroundChickenBtn.style.display = "inline";
+            buyGroundChickenVisible = true;
+          }
+          if (!farm2Built) {
+            buyFarm2Btn.style.display = gold >= 1000 ? "inline" : "none";
+          } else {
+            buyFarm2Btn.style.display = "none";
+          }
+        }
+        farm2El.style.display = farm2Built ? "block" : "none";
+        farm2FarmerCountEl.textContent = "Farmer: " + farm2Farmers;
+        farm2MerchantCountEl.textContent = "Händler: " + farm2Merchants;
+        farm2ChickenTypeEl.textContent = farm2ChickenAssigned
+          ? "Bodenhaltungshühner"
+          : "Keine Hühner";
         farmEl.style.display = farmBuilt ? "block" : "none";
         farmFarmerCountEl.textContent = "Farmer: " + farmFarmers;
         farmMerchantCountEl.textContent = "Händler: " + farmMerchants;
@@ -260,7 +361,10 @@
         if (progressStage >= 3 && gold >= 100 && !chapter2Shown) {
           showBanner("Kapitel 2: Markteinführung");
           chapter2Shown = true;
+          merchantCost = 10;
+          farmerCost = 30;
         }
+        sellGroundBtn.style.display = groundEggCount >= 8 ? "inline" : "none";
         saveGame();
       }
 
@@ -305,9 +409,17 @@
         }
       });
 
+      sellGroundBtn.addEventListener("click", () => {
+        if (groundEggCount >= 8) {
+          groundEggCount -= 8;
+          gold += 2;
+          updateDisplays();
+        }
+      });
+
       merchantBtn.addEventListener("click", () => {
-        if (gold >= 5) {
-          gold -= 5;
+        if (gold >= merchantCost) {
+          gold -= merchantCost;
           merchantCount += 1;
           if (progressStage === 0) {
             progressStage += 1;
@@ -317,8 +429,8 @@
       });
 
       farmerBtn.addEventListener("click", () => {
-        if (gold >= 15) {
-          gold -= 15;
+        if (gold >= farmerCost) {
+          gold -= farmerCost;
           farmerCount += 1;
           if (progressStage === 2) {
             progressStage += 1;
@@ -342,11 +454,34 @@
         }
       });
 
+      buyGroundChickenBtn.addEventListener("click", () => {
+        if (gold >= 250) {
+          gold -= 250;
+          if (farm2ChickenAssigned) {
+            farm2ChickenCount += 1;
+          } else {
+            groundChickenCount += 1;
+          }
+          if (progressStage === 5) {
+            progressStage += 1;
+          }
+          updateDisplays();
+        }
+      });
+
       buyFarmBtn.addEventListener("click", () => {
         if (gold >= 100 && !farmBuilt) {
           gold -= 100;
           farmBuilt = true;
           progressStage += 1;
+          updateDisplays();
+        }
+      });
+
+      buyFarm2Btn.addEventListener("click", () => {
+        if (gold >= 1000 && !farm2Built) {
+          gold -= 1000;
+          farm2Built = true;
           updateDisplays();
         }
       });
@@ -378,6 +513,32 @@
         }
       });
 
+      assign2FarmerBtn.addEventListener("click", () => {
+        if (farmerCount > 0 && farm2Built) {
+          farmerCount -= 1;
+          farm2Farmers += 1;
+          updateDisplays();
+        }
+      });
+
+      assign2MerchantBtn.addEventListener("click", () => {
+        if (merchantCount > 0 && farm2Built) {
+          merchantCount -= 1;
+          farm2Merchants += 1;
+          updateDisplays();
+        }
+      });
+
+      assign2GroundBtn.addEventListener("click", () => {
+        if (farm2Built && !farm2ChickenAssigned && groundChickenCount > 0) {
+          farm2ChickenAssigned = true;
+          farm2ChickenCount += groundChickenCount;
+          groundChickenCount = 0;
+          farm2Multiplier = 1.15;
+          updateDisplays();
+        }
+      });
+
       document.getElementById("reset-btn").addEventListener("click", () => {
         localStorage.removeItem("gameState");
         count = 0;
@@ -396,10 +557,24 @@
         farmMultiplier = 1;
         chapter2Shown = false;
         farmChickenCount = 0;
+        groundEggCount = 0;
+        groundChickenCount = 0;
+        buyGroundChickenVisible = false;
+        farm2Built = false;
+        farm2Farmers = 0;
+        farm2Merchants = 0;
+        farm2ChickenAssigned = false;
+        farm2ChickenCount = 0;
+        farm2Multiplier = 1;
+        merchantCost = 5;
+        farmerCost = 15;
         document.getElementById("container").style.display = "block";
         merchantBtn.style.display = "none";
         buyChickenBtn.style.display = "none";
+        buyGroundChickenBtn.style.display = "none";
         farmerBtn.style.display = "none";
+        buyFarm2Btn.style.display = "none";
+        farm2El.style.display = "none";
         updateDisplays();
       });
       setInterval(() => {
@@ -420,14 +595,34 @@
           spawnEgg(produced);
           updateDisplays();
         }
+        if (farm2Built && farm2ChickenAssigned && farm2Farmers > 0) {
+          const produced2 = Math.round(farm2Farmers * farm2Multiplier);
+          groundEggCount += produced2;
+          if (groundEggCount >= 8) {
+            sellGroundBtn.style.display = "inline";
+          }
+          spawnEgg(produced2);
+          updateDisplays();
+        }
       }, 1000);
 
       setInterval(() => {
+        const merchants = merchantCount + farmMerchants + farm2Merchants;
+        let sales = merchants;
         const possibleSales = Math.floor(count / 8);
-        const sales = Math.min(merchantCount + farmMerchants, possibleSales);
-        if (sales > 0) {
-          count -= sales * 8;
-          gold += sales;
+        const regSales = Math.min(possibleSales, sales);
+        if (regSales > 0) {
+          count -= regSales * 8;
+          gold += regSales;
+          sales -= regSales;
+        }
+        const possibleGround = Math.floor(groundEggCount / 8);
+        const groundSales = Math.min(possibleGround, sales);
+        if (groundSales > 0) {
+          groundEggCount -= groundSales * 8;
+          gold += groundSales * 2;
+        }
+        if (regSales > 0 || groundSales > 0) {
           updateDisplays();
         }
       }, 5000);
