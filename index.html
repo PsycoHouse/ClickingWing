@@ -1,8 +1,8 @@
 <!doctype html>
-<html lang="de">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Huhn Klicker</title>
+    <title>Chicken Clicker</title>
     <style>
       body {
         margin: 0;
@@ -105,49 +105,49 @@
   </head>
   <body>
     <div id="counter-boxes">
-      <span id="egg-count">⛓-Ei: 0</span>
+      <span id="egg-count">⛓-Egg: 0</span>
       <span id="gold-count">🪙 0</span>
-      <span id="merchant-count" style="display: none">Händler: 0</span>
-      <span id="chicken-count" style="display: none">⛓-Hühner: 1</span>
-      <span id="ground-egg-count" style="display: none">Boden-Ei: 0</span>
-      <span id="farmer-count" style="display: none">Farmer: 0</span>
+      <span id="merchant-count" style="display: none">Merchants: 0</span>
+      <span id="chicken-count" style="display: none">⛓-Chickens: 1</span>
+      <span id="ground-egg-count" style="display: none">Ground Egg: 0</span>
+      <span id="farmer-count" style="display: none">Farmers: 0</span>
     </div>
 
     <div id="button-boxes">
       <button id="merchant-btn" style="display: none">
-        Händler anheuern (5🪙)
+        Hire Merchant (5🪙)
       </button>
-      <button id="buy-chicken-btn" style="display: none">⛓-Huhn kaufen</button>
-      <button id="buy-ground-chicken-btn" style="display: none">Bodenhaltung-Huhn kaufen (250🪙)</button>
-      <button id="sell-btn" style="display: none">8 Eier verkaufen</button>
-      <button id="sell-ground-btn" style="display: none">8 Boden-Eier verkaufen</button>
+      <button id="buy-chicken-btn" style="display: none">Buy ⛓ Chicken</button>
+      <button id="buy-ground-chicken-btn" style="display: none">Buy Ground Chicken (250🪙)</button>
+      <button id="sell-btn" style="display: none">Sell 8 Eggs</button>
+      <button id="sell-ground-btn" style="display: none">Sell 8 Ground Eggs</button>
       <button id="farmer-btn" style="display: none">
-        Farmer anheuern (15🪙)
+        Hire Farmer (15🪙)
       </button>
-      <button id="buy-farm-btn" style="display: none">Bauernhof kaufen (100🪙)</button>
-      <button id="buy-farm2-btn" style="display: none">Bauernhof kaufen (1000🪙)</button>
+      <button id="buy-farm-btn" style="display: none">Buy Farm (100🪙)</button>
+      <button id="buy-farm2-btn" style="display: none">Buy Farm (1000🪙)</button>
     </div>
     <div id="container">
-      <h1 id="cage-heading">⛓fighaltung</h1>
+      <h1 id="cage-heading">⛓Cage</h1>
       <div id="chicken">⛓🐔⛓</div>
     </div>
     <div id="farm">
-      <h2>Bauernhof</h2>
-      <span id="farm-farmer-count">Farmer: 0</span>
-      <button id="assign-farmer-btn">Farmer zuweisen</button><br />
-      <span id="farm-merchant-count">Händler: 0</span>
-      <button id="assign-merchant-btn">Händler zuweisen</button><br />
-      <span id="farm-chicken-type">Keine Hühner</span>
-      <button id="assign-chicken-btn">⛓-Hühner zuweisen</button>
+      <h2>Farm</h2>
+      <span id="farm-farmer-count">Farmers: 0</span>
+      <button id="assign-farmer-btn">Assign Farmer</button><br />
+      <span id="farm-merchant-count">Merchants: 0</span>
+      <button id="assign-merchant-btn">Assign Merchant</button><br />
+      <span id="farm-chicken-type">No chickens</span>
+      <button id="assign-chicken-btn">Assign ⛓-Chickens</button>
     </div>
     <div id="farm2" style="display: none">
-      <h2>Bauernhof 2</h2>
-      <span id="farm2-farmer-count">Farmer: 0</span>
-      <button id="assign2-farmer-btn">Farmer zuweisen</button><br />
-      <span id="farm2-merchant-count">Händler: 0</span>
-      <button id="assign2-merchant-btn">Händler zuweisen</button><br />
-      <span id="farm2-chicken-type">Keine Hühner</span>
-      <button id="assign2-ground-btn">Bodenhaltung-Hühner zuweisen</button>
+      <h2>Farm 2</h2>
+      <span id="farm2-farmer-count">Farmers: 0</span>
+      <button id="assign2-farmer-btn">Assign Farmer</button><br />
+      <span id="farm2-merchant-count">Merchants: 0</span>
+      <button id="assign2-merchant-btn">Assign Merchant</button><br />
+      <span id="farm2-chicken-type">No chickens</span>
+      <button id="assign2-ground-btn">Assign Ground Chickens</button>
     </div>
     <button id="reset-btn">Reset</button>
     <div id="banner"></div>
@@ -295,26 +295,26 @@
       }
 
       function updateDisplays() {
-        eggCountEl.textContent = "⛓-Ei: " + count;
-        groundEggCountEl.textContent = "Boden-Ei: " + groundEggCount;
+        eggCountEl.textContent = "⛓-Egg: " + count;
+        groundEggCountEl.textContent = "Ground Egg: " + groundEggCount;
         groundEggCountEl.style.display = groundEggCount > 0 ? "block" : "none";
-        merchantBtn.textContent = `Händler anheuern (${merchantCost}🪙)`;
-        farmerBtn.textContent = `Farmer anheuern (${farmerCost}🪙)`;
+        merchantBtn.textContent = `Hire Merchant (${merchantCost}🪙)`;
+        farmerBtn.textContent = `Hire Farmer (${farmerCost}🪙)`;
         if (merchantCount > 0) {
           merchantCountEl.style.display = "block";
-          merchantCountEl.textContent = "Händler: " + merchantCount;
+          merchantCountEl.textContent = "Merchants: " + merchantCount;
         } else {
           merchantCountEl.style.display = "none";
         }
         if (farmerCount > 0) {
           farmerCountEl.style.display = "block";
-          farmerCountEl.textContent = "Farmer: " + farmerCount;
+          farmerCountEl.textContent = "Farmers: " + farmerCount;
         } else {
           farmerCountEl.style.display = "none";
         }
         if (chickenCount > 1) {
           chickenCountEl.style.display = "block";
-          chickenCountEl.textContent = "⛓-Hühner: " + chickenCount;
+          chickenCountEl.textContent = "⛓-Chickens: " + chickenCount;
         } else {
           chickenCountEl.style.display = "none";
         }
@@ -356,19 +356,19 @@
           }
         }
         farm2El.style.display = farm2Built ? "block" : "none";
-        farm2FarmerCountEl.textContent = "Farmer: " + farm2Farmers;
-        farm2MerchantCountEl.textContent = "Händler: " + farm2Merchants;
+        farm2FarmerCountEl.textContent = "Farmers: " + farm2Farmers;
+        farm2MerchantCountEl.textContent = "Merchants: " + farm2Merchants;
         farm2ChickenTypeEl.textContent = farm2ChickenAssigned
-          ? "Bodenhaltungshühner"
-          : "Keine Hühner";
+          ? "Ground Chickens"
+          : "No chickens";
         farmEl.style.display = farmBuilt ? "block" : "none";
-        farmFarmerCountEl.textContent = "Farmer: " + farmFarmers;
-        farmMerchantCountEl.textContent = "Händler: " + farmMerchants;
+        farmFarmerCountEl.textContent = "Farmers: " + farmFarmers;
+        farmMerchantCountEl.textContent = "Merchants: " + farmMerchants;
         farmChickenTypeEl.textContent = farmChickenAssigned
-          ? "⛓fighaltungshühner"
-          : "Keine Hühner";
+          ? "⛓Cage Chickens"
+          : "No chickens";
         if (progressStage >= 3 && gold >= 100 && !chapter2Shown) {
-          showBanner("Kapitel 2: Markteinführung");
+          showBanner("Chapter 2: Market Launch");
           chapter2Shown = true;
           merchantCost = 10;
           farmerCost = 30;
