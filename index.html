@@ -206,6 +206,7 @@
       let farmChickenAssigned = false;
       let farmMultiplier = 1;
       let chapter2Shown = false;
+      let chapter1Shown = false;
       let farmChickenCount = 0;
       let groundEggCount = 0;
       let groundChickenCount = 0;
@@ -241,6 +242,7 @@
           farmChickenAssigned,
           farmMultiplier,
           chapter2Shown,
+          chapter1Shown,
           farmChickenCount,
           groundEggCount,
           groundChickenCount,
@@ -280,6 +282,7 @@
           farmChickenAssigned = s.farmChickenAssigned;
           farmMultiplier = s.farmMultiplier;
           chapter2Shown = s.chapter2Shown;
+          chapter1Shown = s.chapter1Shown || false;
           farmChickenCount = s.farmChickenCount;
           groundEggCount = s.groundEggCount || 0;
           groundChickenCount = s.groundChickenCount || 0;
@@ -423,6 +426,10 @@
 
       // Initial display update
       loadGame();
+      if (progressStage == 0 && !chapter1Shown) {
+        showBanner("Chapter 1: Egg or Chicken?");
+        chapter1Shown = true;
+      }
       updateDisplays();
 
       function spawnEgg(amount) {
@@ -438,7 +445,7 @@
       function produceEgg() {
         if (chickenCount <= 0) return;
         count += chickenCount;
-        if (count >= 50) {
+        if (count >= 8) {
           sellBtn.style.display = "inline";
         }
         spawnEgg(chickenCount);
@@ -631,6 +638,7 @@
         farmChickenAssigned = false;
         farmMultiplier = 1;
         chapter2Shown = false;
+      chapter1Shown = false;
         farmChickenCount = 0;
         groundEggCount = 0;
         groundChickenCount = 0;
@@ -655,11 +663,13 @@
         buyFarm2Btn.style.display = "none";
         farm2El.style.display = "none";
         updateDisplays();
+        showBanner("Chapter 1: Egg or Chicken?");
+        chapter1Shown = true;
       });
       setInterval(() => {
         if (farmerCount > 0 && chickenCount > 0) {
           count += farmerCount;
-          if (count >= 50) {
+          if (count >= 8) {
             sellBtn.style.display = "inline";
           }
           spawnEgg(farmerCount);
@@ -668,7 +678,7 @@
         if (farmBuilt && farmChickenAssigned && farmFarmers > 0) {
           const produced = Math.round(farmFarmers * farmMultiplier);
           count += produced;
-          if (count >= 50) {
+          if (count >= 8) {
             sellBtn.style.display = "inline";
           }
           spawnEgg(produced);
