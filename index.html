@@ -328,7 +328,10 @@
           merchantBtn.style.display = "inline";
           merchantVisible = true;
         }
-        if (!buyChickenVisible && gold >= 10) {
+        if (chapter2Shown && farmChickenAssigned) {
+          buyChickenBtn.style.display = "none";
+          buyChickenVisible = false;
+        } else if (!buyChickenVisible && gold >= 10) {
           buyChickenBtn.style.display = "inline";
           buyChickenVisible = true;
         }
@@ -345,7 +348,10 @@
           progressStage += 1;
         }
         if (progressStage >= 5) {
-          if (!buyGroundChickenVisible) {
+          if (farm2ChickenAssigned) {
+            buyGroundChickenBtn.style.display = "none";
+            buyGroundChickenVisible = false;
+          } else if (!buyGroundChickenVisible) {
             buyGroundChickenBtn.style.display = "inline";
             buyGroundChickenVisible = true;
           }
