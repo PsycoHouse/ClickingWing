@@ -137,6 +137,8 @@
       <button id="assign-farmer-btn">Assign Farmer</button><br />
       <span id="farm-merchant-count">Merchants: 0</span>
       <button id="assign-merchant-btn">Assign Merchant</button><br />
+      <span id="farm-manager-status">Manager: 0</span>
+      <button id="hire-manager-btn">Hire Manager (1000🪙)</button><br />
       <span id="farm-chicken-type">No chickens</span>
       <button id="assign-chicken-btn">Assign ⛓-Chickens</button>
     </div>
@@ -146,6 +148,8 @@
       <button id="assign2-farmer-btn">Assign Farmer</button><br />
       <span id="farm2-merchant-count">Merchants: 0</span>
       <button id="assign2-merchant-btn">Assign Merchant</button><br />
+      <span id="farm2-manager-status">Manager: 0</span>
+      <button id="hire-manager2-btn">Hire Manager (1000🪙)</button><br />
       <span id="farm2-chicken-type">No chickens</span>
       <button id="assign2-ground-btn">Assign Ground Chickens</button>
     </div>
@@ -175,6 +179,10 @@
       const assign2FarmerBtn = document.getElementById("assign2-farmer-btn");
       const assign2MerchantBtn = document.getElementById("assign2-merchant-btn");
       const assign2GroundBtn = document.getElementById("assign2-ground-btn");
+      const hireManagerBtn = document.getElementById("hire-manager-btn");
+      const hireManager2Btn = document.getElementById("hire-manager2-btn");
+      const farmManagerStatusEl = document.getElementById("farm-manager-status");
+      const farm2ManagerStatusEl = document.getElementById("farm2-manager-status");
       const farmFarmerCountEl = document.getElementById("farm-farmer-count");
       const farmMerchantCountEl = document.getElementById("farm-merchant-count");
       const farmChickenTypeEl = document.getElementById("farm-chicken-type");
@@ -208,6 +216,10 @@
       let farm2ChickenAssigned = false;
       let farm2ChickenCount = 0;
       let farm2Multiplier = 1;
+      let farmManagerHired = false;
+      let farm2ManagerHired = false;
+      let managersBought = 0;
+      let managerCost = 1000;
       let merchantCost = 5;
       let farmerCost = 15;
       let clickInterval;
@@ -239,6 +251,10 @@
           farm2ChickenAssigned,
           farm2ChickenCount,
           farm2Multiplier,
+          farmManagerHired,
+          farm2ManagerHired,
+          managersBought,
+          managerCost,
           merchantCost,
           farmerCost
         };
@@ -274,6 +290,10 @@
           farm2ChickenAssigned = s.farm2ChickenAssigned || false;
           farm2ChickenCount = s.farm2ChickenCount || 0;
           farm2Multiplier = s.farm2Multiplier || 1;
+          farmManagerHired = s.farmManagerHired || false;
+          farm2ManagerHired = s.farm2ManagerHired || false;
+          managersBought = s.managersBought || 0;
+          managerCost = s.managerCost || 1000;
           merchantCost = s.merchantCost || 5;
           farmerCost = s.farmerCost || 15;
           merchantBtn.style.display = merchantVisible ? "inline" : "none";
@@ -365,6 +385,20 @@
             buyFarm2Btn.style.display = "none";
           }
         }
+        hireManagerBtn.textContent = `Hire Manager (${managerCost}🪙)`;
+        hireManager2Btn.textContent = `Hire Manager (${managerCost}🪙)`;
+        hireManagerBtn.style.display =
+          farmBuilt && !farmManagerHired && gold >= managerCost
+            ? "inline"
+            : "none";
+        hireManager2Btn.style.display =
+          farm2Built && !farm2ManagerHired && gold >= managerCost
+            ? "inline"
+            : "none";
+        farmManagerStatusEl.textContent =
+          "Manager: " + (farmManagerHired ? 1 : 0);
+        farm2ManagerStatusEl.textContent =
+          "Manager: " + (farm2ManagerHired ? 1 : 0);
         farm2El.style.display = farm2Built ? "block" : "none";
         farm2FarmerCountEl.textContent = "Farmers: " + farm2Farmers;
         farm2MerchantCountEl.textContent = "Merchants: " + farm2Merchants;
@@ -526,7 +560,7 @@
           farmChickenAssigned = true;
           farmChickenCount += chickenCount;
           chickenCount = 0;
-          farmMultiplier = 1.15;
+          farmMultiplier = 1.15 * (farmManagerHired ? 2 : 1);
           document.getElementById("container").style.display = "none";
           updateDisplays();
         }
@@ -553,7 +587,29 @@
           farm2ChickenAssigned = true;
           farm2ChickenCount += groundChickenCount;
           groundChickenCount = 0;
-          farm2Multiplier = 1.15;
+          farm2Multiplier = 1.15 * (farm2ManagerHired ? 2 : 1);
+          updateDisplays();
+        }
+      });
+
+      hireManagerBtn.addEventListener("click", () => {
+        if (farmBuilt && !farmManagerHired && gold >= managerCost) {
+          gold -= managerCost;
+          farmManagerHired = true;
+          managersBought += 1;
+          managerCost *= 10;
+          farmMultiplier *= 2;
+          updateDisplays();
+        }
+      });
+
+      hireManager2Btn.addEventListener("click", () => {
+        if (farm2Built && !farm2ManagerHired && gold >= managerCost) {
+          gold -= managerCost;
+          farm2ManagerHired = true;
+          managersBought += 1;
+          managerCost *= 10;
+          farm2Multiplier *= 2;
           updateDisplays();
         }
       });
@@ -585,6 +641,10 @@
         farm2ChickenAssigned = false;
         farm2ChickenCount = 0;
         farm2Multiplier = 1;
+        farmManagerHired = false;
+        farm2ManagerHired = false;
+        managersBought = 0;
+        managerCost = 1000;
         merchantCost = 5;
         farmerCost = 15;
         document.getElementById("container").style.display = "block";
